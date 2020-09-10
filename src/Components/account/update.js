@@ -1,39 +1,56 @@
 import React, { Component } from "react";
 import axios from "axios";
-import s from "./Valid.module.css";
+import s from "./account.module.css";
 
-class RegisterForm extends Component {
+class Update extends Component {
+
   state = {
-    email: "name",
-    password: "password",
+    email: "",
+    password: "",
     customerName: "",
     contactName: "",
     address: "",
     city: "",
     postalCode: "",
-    country: ""
+    country: "",
+    customerID: ""
   ,
-    errorForm: "",
+
     count: 0,
     error: "",
-    err: ""
   };
+
+  componentDidMount(){
+    let token = "Bearer " + localStorage.getItem("jwt");
+    axios.get(`http://localhost:3001/current`, {headers: {'Authorization': token }})
+    .then(response =>{ 
+        console.log("response",response.data)  
+        this.setState({
+            customerID: response.data.id,
+            customerName: response.data.customerName,
+            contactName: response.data.contactName,
+            address: response.data.address,
+            city: response.data.city,
+            country: response.data.country,
+            postalCode: response.data.postalCode,
+            email: response.data.email,
+        })
+        })               
+}
 
   validate = () => {
     let errorForm = "";
     let err = "";
     
     if (
-      this.state.email === "name" ||
+      this.state.email.length === 0 ||
       this.state.email.length < 10 ||
-      this.state.email.match(/[0-9]/g).length === 0 ||
+      this.state.email.match(/[0-9]/g) === null ||
       !this.state.email.includes("@") ||
-      this.state.password === "password" ||
+      this.state.password.length === 0 ||
       this.state.password.length < 6 ||
-      this.state.password.match(/[0-9]/g).length === 0      
+      this.state.password.match(/[0-9]/g) === null      
     ) {
-      console.log("length",this.state.email.includes("@"))
-      console.log("email",this.state.email)
       errorForm = "You have a some ERROR";
     } else if (this.state.count === 3) {
       err = "Cannot login at this time. Contact the System Administrator";
@@ -70,13 +87,11 @@ class RegisterForm extends Component {
 
   hanleSubmit = event => {
     event.preventDefault();
-    const valid = this.validate();
-    if (valid) {
+    // const valid = this.validate();
+    // if (valid) {
          
       const form = event.target;
-        const customer = {
-          email:this.state.email,
-          password: this.state.password,
+        const updatecustomer = {
           customerName: this.state.customerName,
           contactName: this.state.contactName, 
           address: this.state.address, 
@@ -85,96 +100,108 @@ class RegisterForm extends Component {
           country: this.state.country
         }
 
-        axios.post(`http://localhost:3001/customers`, {customer})
+        let token = "Bearer " + localStorage.getItem("jwt")
+        axios({ method: 'patch', url: `http://localhost:3001/customers/${this.state.customerID}`, headers: {'Authorization': token }, data: { customer: updatecustomer }})
         .then(response =>{ 
-            console.log(response)
-            if(response.status === 201){ 
-            this.setState({chek:true})
-            console.log(this.state.chek)  
-            } else{
-              this.setState({chek:false})
-            } 
-            })    
-          .then(() => {if(this.state.chek){
-            this.setState({err:"Created"})            
-          } else {
-            this.setState({err:"Not created"})
-          }})
-          .catch(this.setState({err:"Not created"}))
+          console.log(response)
+          if(response.status === 200) this.setState({ err: "Updated" });
+          })    
+      .catch(error => {
+              if(error.response.status === 422){
+                this.setState({error: "You have a some error!"})
+              } 
+      }); 
 
         form.reset();  
 
       console.log(this.state);
-    }
+    
   };
 
   render() {
     return (
-      <form className={s.myform} onSubmit={this.hanleSubmit.bind(this)}>
-        <h1>Sign Up</h1>
+      <div>
+        <div style={{height: "100px"}}></div>
+        <form className={s.myform} onSubmit={this.hanleSubmit.bind(this)}>
+        <h1>Update</h1>
         <p>{this.state.errorForm}</p>
         <p>{this.state.err}</p>
-        <div>
+        {/* <div>
+          <label>Email: </label>
           <input
             type="text"
             name="email"
-            placeholder="Enter your Email"
-            // pattern="^[ 0-9]+$"
+            defaultValue = {this.state.email}
+            placeholder="Enter your Email"            
             onChange={this.handleChange.bind(this)}
           />
         </div>
         <div>
+          <label>Password: </label>
           <input
             type="password"
             name="password"
-            placeholder="Enter your Password"
+            defaultValue = {this.state.password}
+            placeholder="Enter your new Password"
             onChange={this.handleChange.bind(this)}
           />
-        </div>
+        </div> */}
         <div>
+          <label>Name: </label>
           <input
             type="text"
             name="customerName"
+            defaultValue = {this.state.customerName}
             placeholder="Enter your Name"
             onChange={this.handleChange.bind(this)}
           />
         </div>
         <div>
+          <label>Contact name: </label>
           <input
             type="text"
             name="contactName"
+            defaultValue = {this.state.contactName}
             placeholder="Enter your contact Name"
             onChange={this.handleChange.bind(this)}
           />
         </div>
         <div>
+          <label>Address: </label>
           <input
             type="text"
             name="address"
+            defaultValue = {this.state.address}
             placeholder="Enter your address"
             onChange={this.handleChange.bind(this)}
           />
         </div>
         <div>
+          <label>City: </label>
           <input
             type="text"
             name="city"
+            defaultValue = {this.state.city}
             placeholder="Enter your city"
             onChange={this.handleChange.bind(this)}
           />
         </div>
         <div>
+          <label>Postal code: </label>
           <input
             type="text"
             name="postalCode"
+            defaultValue = {this.state.postalCode}
             placeholder="Enter your postalCode"
             onChange={this.handleChange.bind(this)}
           />
         </div>
         <div>
+          <label>Country: </label>
           <input
             type="text"
             name="country"
+            defaultValue = {this.state.country}
             placeholder="Enter your country"
             onChange={this.handleChange.bind(this)}
           />
@@ -182,12 +209,14 @@ class RegisterForm extends Component {
         <div>
           <input
             type="submit"
-            value="Sign Up"
+            value="Update"
             onClick={this.incrementCount.bind(this)}
           />
         </div>
       </form>
+         </div>
     );
   }
 }
-export default RegisterForm;
+
+export default Update;

@@ -1,24 +1,34 @@
 .productlist{
     display: flex;
-    float: left;
+    justify-content: space-between; 
+    align-items: center;
+    position: relative;
     margin-top: 40px;
     margin-left: 40px;
-    margin-bottom: 40px;
     background-color: rgb(255, 255, 255);
     border: 0.5px solid #e4e4e4;
     padding: 20px;
-    width: 800px;
+    width: 1000px;
 }
 
 .conteiner{
- margin-left: -60px;
- color: rgb(39, 39, 39);
+    flex-basis: 600px;
+    margin-right: auto;
+    margin-left: 20px;
+    width: 250px;
+    padding-right: 20px;
+    color: rgb(39, 39, 39);
 }
-.conteiner h3{
+.conteiner h3,h1,h2{
     text-align: left;
+    margin: 4px;
 }
+
+
 .productlist img{
-    width: 70%
+    width: 100px;
+    height: 100px;
+    margin-top: 10px;
 }
 
 
@@ -35,7 +45,6 @@
     transition-duration: 0.4s;
     cursor: pointer;
     height: 40px;
-    outline: none;
 }
 
 .productlist button:hover{
@@ -44,7 +53,9 @@
 }
 
 .add{
-    margin-top: 50px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 60px;
     
 }
 
@@ -78,3 +89,23 @@
     margin-left: 10px;
     font-size: 20px;
 }
+
+
+.butt {
+    background-color: #3E92FF; /* Green */
+    border: none;
+    color: white;
+    padding: 8px 22px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 24px;
+    margin: 4px 2px;
+    margin-bottom: 40px;
+    width: 200px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+  }
+.butt:hover {
+    background-color: #FFEA00;
+    color: rgb(49, 49, 49);
+  }

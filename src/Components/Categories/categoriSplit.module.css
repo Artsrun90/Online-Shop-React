@@ -1,0 +1,38 @@
+.accordion {
+    background-color: rgb(226, 226, 226);
+    color: #444;
+    cursor: pointer;
+    padding: 12px;
+    width: 300px;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: 18px;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: 0.2s;
+    margin: 20px;
+    border: 0.5px solid #e4e4e4;    
+  }
+  
+  .active, .accordion:hover {
+    background-color: #3E92FF; 
+    color: white;
+  }
+
+  .splitleft { 
+    float: left;
+    margin-top: 40px;
+  }
+  .splitright {
+    float: right;
+    margin-right: 40px;
+    margin-top: 40px;
+  }  
+  
+  .centered {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 40px;
+  }
+  
